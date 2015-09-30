@@ -2,22 +2,23 @@ var React = require('react');
 module.exports = React.createClass({
 
 	render: function() {
+		console.log(this.props.model.get('tag[0]'));
 		return (
 			<section className="jobRow-Box">
 			<div className="jobTitleBox">
-				<span className="jobTitle">Senior Front-End Engineer</span>
-				<span className="dateAdded">Yesterday</span>
+				<span className="jobTitle">{this.props.model.get('title')}</span>
+				<span className="dateAdded">{this.props.model.get('dateCreated')}</span>
 			</div>
 			<div className="infoLocation-Line">
-				<span className="job-type">NSONE</span>
+				<span className="job-type">{this.props.model.get('company')}</span>
 				<span className="bullet">&#8226;</span>
-				<span className="location">New York, NY</span>
+				<span className="location">{this.props.model.get('location')}</span>
 			</div>
-			<div className="descriptionSnip">Lots and lots of words regarding saomething that I am sure is very important but hasnt actyally been pulled from a server just yet.</div>
+			<div className="descriptionSnip">{this.props.model.get('description')}</div>
 			<ul className="tagLine">
-				<li>tag1</li>
-				<li>tag2</li>
-				<li>tag3</li>
+				<li>{this.props.model.get('tag[0]')}</li>
+				<li>{this.props.model.get('tag[1]')}</li>
+				<li>{this.props.model.get('tag[2]')}</li>
 			</ul>
 			<hr/>
 			</section>

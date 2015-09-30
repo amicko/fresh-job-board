@@ -1,30 +1,35 @@
 .first-box {
+  display: inline-block;
   width: 35em;
-  float: right; }
+  margin: 0 0 0 4em; }
 
 .form-box {
+  display: inline-block;
   width: 35em;
-  float: left;
-  height: 30em; }
-  .form-box .submitJobForm label {
-    display: block;
-    width: 100%; }
-  .form-box .submitJobForm input {
-    display: block;
-    width: 100%; }
-  .form-box .submitJobForm textarea {
-    display: block;
-    width: 100%;
-    height: 6em; }
-  .form-box .submitJobForm button {
-    display: block;
-    background-color: #00A246;
-    float: right;
-    height: 2em;
-    width: 8em;
-    font-size: 22px;
-    color: #FCFEC3;
-    margin-top: 0.5em; }
+  height: 30em;
+  margin: 0 0 0 3em; }
+  .form-box .submitJobForm {
+    position: relative;
+    margin-top: -3em; }
+    .form-box .submitJobForm label {
+      display: block;
+      width: 100%; }
+    .form-box .submitJobForm input {
+      display: block;
+      width: 100%; }
+    .form-box .submitJobForm textarea {
+      display: block;
+      width: 100%;
+      height: 6em; }
+    .form-box .submitJobForm button {
+      display: block;
+      background-color: #00A246;
+      float: right;
+      height: 2em;
+      width: 8em;
+      font-size: 22px;
+      color: #FCFEC3;
+      margin-top: 0.5em; }
 
 .navBar-Box {
   clear: both; }
@@ -146,3 +151,35 @@
     font-size: 20px;
     color: #fff;
     margin-bottom: 0.5em; }
+
+.company-Box .company-Box-Box {
+  margin: 0 5em; }
+  .company-Box .company-Box-Box h1 {
+    font-size: 3em;
+    position: relative;
+    margin-bottom: -0.2em; }
+  .company-Box .company-Box-Box .coverPic {
+    background: no-repeat center/100% url("../images/featured.jpg");
+    height: 30em;
+    width: 50em;
+    margin: 0 auto; }
+  .company-Box .company-Box-Box .profilePic {
+    background: no-repeat center/100% url("../images/featured-logo.jpg");
+    height: 22em;
+    width: 22em;
+    margin: 0 auto;
+    position: relative;
+    margin-top: -12em; }
+  .company-Box .company-Box-Box .companyInfo {
+    width: 19em;
+    margin: 5em auto 13em auto; }
+    .company-Box .company-Box-Box .companyInfo .companyName {
+      display: block;
+      color: #00A142;
+      font-size: 5em; }
+    .company-Box .company-Box-Box .companyInfo .companyLocation {
+      display: block;
+      color: #696969;
+      font-size: 2em;
+      width: 6em;
+      margin: 0 auto; }

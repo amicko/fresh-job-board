@@ -1,5 +1,9 @@
 'use strict';
 var React = require('react');
+var jobPostCollection = require('./collections/jobPostingCollection.js');
+var jobPost = require('./models/jobPostingModel.js');
+var companyInfoCollection = require('./collections/companyInfoCollection.js');
+var companyInfo = require('./models/companyInfoModel.js');
 var AppComponent = require('./components/appComponent.js');
 var FirstBox = require('./components/firstBoxComponent.js');
 var FormComponent = require('./components/formComponent.js');
