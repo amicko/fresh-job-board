@@ -8,5 +8,6 @@ module.exports = Backbone.Model.extend({
 		dateCreated: null,
 		description: '',
 		tag: []
-	}
+	},
+	urlRoot: 'https://jmingus-server.herokuapp.com/collections/testMicko'
 })
