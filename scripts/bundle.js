@@ -32538,7 +32538,7 @@ module.exports = Backbone.Collection.extend({
 	// url: 'https://nonprofit-dashboard.herokuapp.com/campaigns'
 });
 
-},{"../models/companyInfoModel.js":173,"backbone":1}],161:[function(require,module,exports){
+},{"../models/companyInfoModel.js":174,"backbone":1}],161:[function(require,module,exports){
 'use strict';
 
 var Backbone = require('backbone');
@@ -32548,148 +32548,171 @@ module.exports = Backbone.Collection.extend({
 	url: 'https://jmingus-server.herokuapp.com/collections/testMicko'
 });
 
-},{"../models/jobPostingModel.js":174,"backbone":1}],162:[function(require,module,exports){
+},{"../models/jobPostingModel.js":175,"backbone":1}],162:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
+var Backbone = require('backbone');
+var JobCollection = require('../collections/jobPostingCollection.js');
+
+// Jobs Page:
+var FilterBox = require('./filterBoxComponent.js');
+var JobRowList = require('./jobRowListComponent.js');
+var InfoBox = require('./informationBoxComponent.js');
+var jobData = require('../data/jobData.js');
+
+// Company Page:
+var CompanyBox = require('./companyBoxListComponent.js');
+var companyData = require('../data/companyData.js');
+
+// For Employers Page:
+var NewJobForm = require('./formComponent.js');
+var CompanyTipsBox = require('./firstBoxComponent.js');
+
+console.log('pre-module.exports');
+
 module.exports = React.createClass({
 	displayName: 'exports',
 
+	getInitialState: function getInitialState() {
+		return {
+			pageName: 'home',
+			id: null
+		};
+	},
+	componentWillMount: function componentWillMount() {
+		var self = this;
+		this.jobs = new JobCollection();
+
+		var Router = Backbone.Router.extend({
+			routes: {
+				'': 'goHome',
+				'home': 'goHome',
+				'jobs': 'goJobs',
+				'companies': 'goCompanies',
+				'cities': 'goCities',
+				'whyFresh': 'goWhyFresh',
+				'forEmployers': 'goForEmployers'
+			},
+			goHome: function goHome() {
+				self.setState({
+					pageName: 'home'
+				});
+			},
+			goJobs: function goJobs() {
+				self.setState({
+					pageName: 'jobs'
+				});
+			},
+			goCompanies: function goCompanies() {
+				self.setState({
+					pageName: 'companies'
+				});
+			},
+			goCities: function goCities() {
+				self.setState({
+					pageName: 'cities'
+				});
+			},
+			goWhyFresh: function goWhyFresh() {
+				self.setState({
+					pageName: 'whyFresh'
+				});
+			},
+			goForEmployers: function goForEmployers() {
+				self.setState({
+					pageName: 'forEmployers'
+				});
+			}
+		});
+
+		this.router = new Router();
+		Backbone.history.start();
+	},
 	render: function render() {
+		var pageComponent = null;
+
+		if (this.state.pageName === 'home') {
+			console.log('Home Page');
+		} else if (this.state.pageName === 'jobs') {
+			console.log('Jobs Page');
+			pageComponent = React.createElement(
+				'div',
+				null,
+				React.createElement(FilterBox, null),
+				React.createElement(
+					'div',
+					{ className: 'jobRow-container' },
+					React.createElement(JobRowList, { jobRow: jobData })
+				),
+				React.createElement(
+					'div',
+					{ className: 'infoBox-container' },
+					React.createElement(InfoBox, null)
+				)
+			);
+		} else if (this.state.pageName === 'companies') {
+			console.log('Companies Page');
+			pageComponent = React.createElement(
+				'div',
+				null,
+				React.createElement(CompanyBox, { companyBox: companyData })
+			);
+		} else if (this.state.pageName === 'cities') {
+			console.log('Cities Page');
+			pageComponent = React.createElement(
+				'div',
+				{ className: 'construction' },
+				React.createElement(
+					'h1',
+					null,
+					'COMING SOON!'
+				),
+				React.createElement(
+					'h2',
+					null,
+					'This site is under construction'
+				)
+			);
+		} else if (this.state.pageName === 'whyFresh') {
+			console.log('Why Fresh Page');
+			pageComponent = React.createElement(
+				'div',
+				{ className: 'construction' },
+				React.createElement(
+					'h1',
+					null,
+					'COMING SOON!'
+				),
+				React.createElement(
+					'h2',
+					null,
+					'This site is under construction'
+				)
+			);
+		} else if (this.state.pageName === 'forEmployers') {
+			console.log('For Employers Page');
+			pageComponent = React.createElement(
+				'div',
+				null,
+				React.createElement(NewJobForm, { jobs: this.jobs, router: this.router }),
+				React.createElement(CompanyTipsBox, null)
+			);
+		}
 
 		return React.createElement(
-			'tr',
+			'div',
 			null,
 			React.createElement(
-				'th',
+				'main',
 				null,
-				'-'
-			),
-			React.createElement(
-				'th',
-				null,
-				'-'
-			),
-			React.createElement(
-				'th',
-				null,
-				'-'
-			),
-			React.createElement(
-				'th',
-				null,
-				'-'
+				pageComponent
 			)
 		);
 	}
 });
 
-// <section className="jobRow-Box">
-
-// 			<div>{jobRows}</div>
-// 			<div className="jobTitleBox">
-// 				<span className="jobTitle"></span>
-// 				<span className="dateAdded"></span>
-// 			</div>
-// 			<div className="infoLocation-Line">
-// 				<span className="job-type"></span>
-// 				<span className="bullet">&#8226;</span>
-// 				<span className="location"></span>
-// 			</div>
-// 			<div className="descriptionSnip"></div>
-// 			<ul className="tagLine">
-// 				<li></li>
-// 				<li></li>
-// 				<li></li>
-// 			</ul>
-// 			<hr/>
-// 			</section>
-
-},{"react":159}],163:[function(require,module,exports){
-'use strict';
-
-var React = require('react');
-var FirstBox = require('./firstBoxComponent.js');
-var FormComponent = require('./formComponent.js');
-var NavComponent = require('./navComponent.js');
-var JobRowList = require('./jobRowListComponent');
-var JobRowComponent = require('./JobRowComponent.js');
-var CompanyBoxComponent = require('./companyBoxComponent.js');
-var jobPostCollection = require('../collections/jobPostingCollection.js');
-var jobPost = require('../models/jobPostingModel.js');
-var companyInfoCollection = require('../collections/companyInfoCollection.js');
-var companyInfo = require('../models/companyInfoModel.js');
-
-// var jobPost1 = new jobPost({
-// 	title: 'Farmer',
-// 	dateCreated: 'September 29, 2015',
-// 	company: 'Monsanto',
-// 	location: 'Houston, TX',
-// 	description: 'words, words, words',
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
-// var jobPost2 = new jobPost({
-// 	title: 'Font-End Engineer',
-// 	dateCreated: 'September 29, 2015',
-// 	company: 'Google',
-// 	location: 'Austin, TX',
-// 	description: 'words, words, words',
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
-// var jobPost3 = new jobPost({
-// 	title: 'Inventory Supervisor',
-// 	dateCreated: 'September 29, 2015',
-// 	company: 'Wal-Mart',
-// 	location: 'Taylor, TX',
-// 	description: 'words, words, words',
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
-// var jobPost4 = new jobPost({
-// 	title: 'Data Entry Specialist',
-// 	dateCreated: 'September 29, 2015',
-// 	company: 'Texas State Comptroller',
-// 	location: 'Austin, TX',
-// 	description: 'words, words, words',
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
-
-var company1 = new companyInfo({ name: 'MaxPlay', location: 'Austin, TX' });
-
-module.exports = React.createClass({
-	displayName: 'exports',
-
-	componentWillMount: function componentWillMount() {
-		this.jobs = new jobPostCollection();
-		this.jobs.fetch();
-		console.log(this.jobs);
-	},
-
-	render: function render() {
-		return React.createElement(
-			'section',
-			{ className: 'app-Box' },
-			React.createElement(NavComponent, null),
-			React.createElement(
-				'div',
-				{ className: 'subNav-Box' },
-				React.createElement(FormComponent, null),
-				React.createElement(FirstBox, null)
-			),
-			React.createElement(
-				'div',
-				null,
-				React.createElement(JobRowList, { jobRow: JobRowComponent })
-			),
-			React.createElement(
-				'div',
-				null,
-				React.createElement(CompanyBoxComponent, { model: company1 })
-			)
-		);
-	}
-});
-
-},{"../collections/companyInfoCollection.js":160,"../collections/jobPostingCollection.js":161,"../models/companyInfoModel.js":173,"../models/jobPostingModel.js":174,"./JobRowComponent.js":162,"./companyBoxComponent.js":164,"./firstBoxComponent.js":166,"./formComponent.js":167,"./jobRowListComponent":170,"./navComponent.js":171,"react":159}],164:[function(require,module,exports){
+},{"../collections/jobPostingCollection.js":161,"../data/companyData.js":171,"../data/jobData.js":172,"./companyBoxListComponent.js":164,"./filterBoxComponent.js":165,"./firstBoxComponent.js":166,"./formComponent.js":167,"./informationBoxComponent.js":168,"./jobRowListComponent.js":170,"backbone":1,"react":159}],163:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32717,12 +32740,12 @@ module.exports = React.createClass({
 					React.createElement(
 						"span",
 						{ className: "companyName" },
-						this.props.model.get('name')
+						this.props.company.get('name')
 					),
 					React.createElement(
 						"span",
 						{ className: "companyLocation" },
-						this.props.model.get('location')
+						this.props.company.get('location')
 					)
 				)
 			)
@@ -32730,7 +32753,29 @@ module.exports = React.createClass({
 	}
 });
 
-},{"react":159}],165:[function(require,module,exports){
+},{"react":159}],164:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+var CompanyBoxComponent = require('./companyBoxComponent.js');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		var companyBoxData = this.props.companyBox.map(function (company) {
+			return React.createElement(CompanyBoxComponent, { company: company });
+		});
+		return React.createElement(
+			'div',
+			null,
+			companyBoxData
+		);
+	}
+});
+
+},{"./companyBoxComponent.js":163,"react":159}],165:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -32853,12 +32898,13 @@ module.exports = React.createClass({
 	displayName: "exports",
 
 	render: function render() {
+		// console.log(this.props.job);
 		return React.createElement(
 			"section",
 			{ className: "form-box" },
 			React.createElement(
 				"form",
-				{ className: "submitJobForm" },
+				{ className: "submitJobForm", onSubmit: this.onFormSubmitted },
 				React.createElement(
 					"h2",
 					null,
@@ -32869,31 +32915,31 @@ module.exports = React.createClass({
 					null,
 					"Title"
 				),
-				React.createElement("input", { type: "text" }),
+				React.createElement("input", { type: "text", ref: "title" }),
 				React.createElement(
 					"label",
 					null,
 					"Company Name"
 				),
-				React.createElement("input", { type: "text" }),
+				React.createElement("input", { type: "text", ref: "company" }),
 				React.createElement(
 					"label",
 					null,
 					"Location"
 				),
-				React.createElement("input", { type: "text" }),
+				React.createElement("input", { type: "text", ref: "location" }),
 				React.createElement(
 					"label",
 					null,
 					"Description"
 				),
-				React.createElement("textarea", null),
+				React.createElement("textarea", { ref: "description" }),
 				React.createElement(
 					"label",
 					null,
 					"Tags"
 				),
-				React.createElement("input", { type: "text" }),
+				React.createElement("input", { type: "text", ref: "tags" }),
 				React.createElement(
 					"button",
 					null,
@@ -32901,6 +32947,16 @@ module.exports = React.createClass({
 				)
 			)
 		);
+	},
+	onFormSubmitted: function onFormSubmitted(e) {
+		e.preventDefault();
+		var newJob = this.props.jobs.add({
+			title: this.refs.title.getDOMNode().value,
+			company: this.refs.company.getDOMNode().value,
+			location: this.refs.location.getDOMNode().value,
+			description: this.refs.description.getDOMNode().value
+		});
+		console.log('Job successfully submitted');
 	}
 });
 
@@ -32964,61 +33020,75 @@ module.exports = React.createClass({
 });
 
 },{"react":159}],169:[function(require,module,exports){
-'use strict';
+"use strict";
 
 var React = require('react');
 module.exports = React.createClass({
-	displayName: 'exports',
+	displayName: "exports",
 
 	render: function render() {
 
 		return React.createElement(
-			'tr',
-			null,
+			"section",
+			{ className: "jobRow-Box" },
 			React.createElement(
-				'th',
-				null,
-				'-'
+				"div",
+				{ className: "jobTitleBox" },
+				React.createElement(
+					"span",
+					{ className: "jobTitle" },
+					this.props.job.get('title')
+				),
+				React.createElement(
+					"span",
+					{ className: "dateAdded" },
+					"Today"
+				)
 			),
 			React.createElement(
-				'th',
-				null,
-				'-'
+				"div",
+				{ className: "infoLocation-Line" },
+				React.createElement(
+					"span",
+					{ className: "job-type" },
+					this.props.job.get('company')
+				),
+				React.createElement(
+					"span",
+					{ className: "bullet" },
+					"•"
+				),
+				React.createElement(
+					"span",
+					{ className: "location" },
+					this.props.job.get('location')
+				)
 			),
 			React.createElement(
-				'th',
-				null,
-				'-'
+				"div",
+				{ className: "descriptionSnip" },
+				this.props.job.get('description')
 			),
 			React.createElement(
-				'th',
-				null,
-				'-'
-			)
+				"ul",
+				{ className: "tagLine" },
+				React.createElement("li", null),
+				React.createElement("li", null),
+				React.createElement("li", null)
+			),
+			React.createElement("hr", null)
 		);
 	}
 });
 
-// <section className="jobRow-Box">
+//
 
-// 			<div>{jobRows}</div>
-// 			<div className="jobTitleBox">
-// 				<span className="jobTitle"></span>
-// 				<span className="dateAdded"></span>
-// 			</div>
-// 			<div className="infoLocation-Line">
-// 				<span className="job-type"></span>
-// 				<span className="bullet">&#8226;</span>
-// 				<span className="location"></span>
-// 			</div>
-// 			<div className="descriptionSnip"></div>
-// 			<ul className="tagLine">
-// 				<li></li>
-// 				<li></li>
-// 				<li></li>
-// 			</ul>
-// 			<hr/>
-// 			</section>
+// <tr>
+// 				<th>{this.props.job.get('title')}</th>
+// 				<th>{this.props.job.get('company')}</th>
+// 				<th>{this.props.job.get('location')}</th>
+// 				<th>{this.props.job.get('description')}</th>
+// 			</tr>
 
 },{"react":159}],170:[function(require,module,exports){
 'use strict';
@@ -33030,158 +33100,143 @@ var JobRowComponent = require('./jobRowComponent');
 module.exports = React.createClass({
 	displayName: 'exports',
 
-	render: function render() {
-		// var jobRowData = this.props.jobRow.map(function(job) {
-		// 	return (
-		// 		<JobRowComponent job={job} />
-		// 	);
-		// });
+	componentWillMount: function componentWillMount() {
+		var self = this;
 		console.log(this.props.jobRow);
+		this.props.jobRow.on('sync', function () {
+			self.forceUpdate();
+		});
+	},
 
+	render: function render() {
+		console.log(this);
+		var jobRowData = this.props.jobRow.map(function (job) {
+			return React.createElement(JobRowComponent, { job: job });
+		});
 		return React.createElement(
 			'div',
-			{ className: 'row' },
-			React.createElement(
-				'h1',
-				null,
-				'Job Positions'
-			),
-			React.createElement(
-				'table',
-				{ className: 'table' },
-				React.createElement(
-					'thead',
-					null,
-					React.createElement(
-						'tr',
-						null,
-						React.createElement(
-							'th',
-							null,
-							'Title'
-						),
-						React.createElement(
-							'th',
-							null,
-							'Company'
-						),
-						React.createElement(
-							'th',
-							null,
-							'Location'
-						),
-						React.createElement(
-							'th',
-							null,
-							'Description'
-						)
-					)
-				),
-				React.createElement(
-					'tbody',
-					null,
-					React.createElement('div', null)
-				)
-			)
+			null,
+			jobRowData
 		);
 	}
 });
 
 },{"./jobRowComponent":169,"react":159}],171:[function(require,module,exports){
-"use strict";
-
-var React = require('react');
-module.exports = React.createClass({
-	displayName: "exports",
-
-	render: function render() {
-		return React.createElement(
-			"section",
-			{ className: "navBar-Box" },
-			React.createElement("div", { className: "topGreyBox" }),
-			React.createElement(
-				"div",
-				{ className: "navBar" },
-				React.createElement("a", { href: "#home", className: "navLogo" }),
-				React.createElement(
-					"div",
-					{ className: "logoTitle" },
-					"Fresh Jobs"
-				),
-				React.createElement(
-					"ul",
-					{ className: "navBarItems" },
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: "#jobs" },
-							"JOBS"
-						)
-					),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: "#companies" },
-							"COMPANIES"
-						)
-					),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: "#cities" },
-							"CITIES"
-						)
-					),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: "#whyFresh" },
-							"WHY FRESH?"
-						)
-					),
-					React.createElement(
-						"li",
-						null,
-						React.createElement(
-							"a",
-							{ href: "#forEmployers" },
-							"FOR EMPLOYERS"
-						)
-					)
-				)
-			)
-		);
-	}
-});
-
-},{"react":159}],172:[function(require,module,exports){
 'use strict';
+
+var CompanyInfoCollection = require('../collections/companyInfoCollection');
+
+module.exports = new CompanyInfoCollection([{ name: 'MaxPlay', location: 'Austin, TX' }, { name: 'Walmart', location: 'Austin, TX' }, { name: 'Decipher Inc.', location: 'San Francisco, CA' }, { name: 'NEC Electronics', location: 'Roseville, CA' }, { name: 'Wash N Go', location: 'Round Rock, TX' }, { name: 'Stuff N Junk', location: 'Kalispell, MT' }]);
+
+},{"../collections/companyInfoCollection":160}],172:[function(require,module,exports){
+'use strict';
+
+var JobPostCollection = require('../collections/jobPostingCollection');
+
+module.exports = new JobPostCollection([{ title: 'Trading Card Sorter', company: 'Decipher Inc.', location: 'San Francisco, CA', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Front-End Engineer', company: 'Iron yard Academy', location: 'Austin, TX', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Cashier', company: 'McDonalds', location: 'Roseville, CA', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Inventory Supervisor', company: 'WalMart', location: 'Taylor, TX', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Car Washer', company: 'Pump n Go', location: 'Round Rock, TX', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Stuff Grabber', company: 'Stuff N Junk', location: 'Kalispell, MT', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Operator', company: 'NEC Electronics', location: 'Roseville, CA', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Clerk', company: 'Clerks To Go', location: 'Rocklin, CA', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }, { title: 'Receptionist', company: 'Big Time OfficeWorks', location: 'Missoula, MT', description: 'I suggest you drop it, Mr. Data. I am your worst nightmare! Yes, absolutely, I do indeed concur, wholeheartedly! Your head is not an artifact! Ill alert the crew. Yesterday I did not know how to eat gagh. Flair is what marks the difference between artistry and mere competence. Ill be sure to note that in my log. We finished our first sensor sweep of the neutral zone.' }]);
+
+},{"../collections/jobPostingCollection":161}],173:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
-var jobPostCollection = require('./collections/jobPostingCollection.js');
-var jobPost = require('./models/jobPostingModel.js');
-var companyInfoCollection = require('./collections/companyInfoCollection.js');
-var companyInfo = require('./models/companyInfoModel.js');
-var AppComponent = require('./components/appComponent.js');
-var FirstBox = require('./components/firstBoxComponent.js');
-var FormComponent = require('./components/formComponent.js');
-var NavComponent = require('./components/navComponent.js');
-var JobRowComponent = require('./components/jobRowComponent.js');
-var FilterBoxComponent = require('./components/filterBoxComponent.js');
-var InformationBoxComponent = require('./components/informationBoxComponent.js');
+var AppComponent = require('./components/AppComponent');
 
-var mainElement = document.getElementById('main-content');
+React.render(React.createElement(AppComponent, null), document.getElementById('main-content'));
 
-React.render(React.createElement(AppComponent, null), mainElement);
+// 'use strict';
+// var React = require('react');
+// var Backbone = require('backbone');
+// var FilterBox = require('./components/filterBoxComponent.js');
+// var JobRowList = require('./components/jobRowListComponent.js');
+// var InfoBox = require('./components/informationBoxComponent.js');
+// var jobData = require('./data/jobData.js');
+// var CompanyBox = require('./components/companyBoxListComponent.js');
+// var companyData = require('./data/companyData.js');
+// var CompanyTipsBox = require('./components/firstBoxComponent.js');
+// var NewJobForm = require('./components/formComponent.js');
+// var JobCollection = require('./collections/jobPostingCollection.js');
 
-},{"./collections/companyInfoCollection.js":160,"./collections/jobPostingCollection.js":161,"./components/appComponent.js":163,"./components/filterBoxComponent.js":165,"./components/firstBoxComponent.js":166,"./components/formComponent.js":167,"./components/informationBoxComponent.js":168,"./components/jobRowComponent.js":169,"./components/navComponent.js":171,"./models/companyInfoModel.js":173,"./models/jobPostingModel.js":174,"react":159}],173:[function(require,module,exports){
+// var mainElement = document.getElementById('main-content');
+// // console.log(this);
+
+// // this.jobs = new JobCollection();
+
+// var Router = Backbone.Router.extend({
+// 	routes: {
+// 		'': 'goHome',
+// 		'home': 'goHome',
+// 		'jobs': 'goJobs',
+// 		'companies': 'goCompanies',
+// 		'cities': 'goCities',
+// 		'whyFresh': 'goWhyFresh',
+// 		'forEmployers': 'goForEmployers'
+// 	},
+// 	goHome: function() {
+// 		React.render(
+// 			<div></div>,
+// 			mainElement
+// 			)
+// 	},
+// 	goJobs: function() {
+// 		React.render(
+// 			<div>
+// 				<FilterBox />
+// 				<div className="jobRow-container">
+// 					<JobRowList jobRow={jobData}/>
+// 				</div>
+// 				<div className="infoBox-container">
+// 					<InfoBox />
+// 				</div>
+// 			</div>,
+// 			mainElement
+// 		);
+// 	},
+// 	goCompanies: function() {
+// 		React.render(
+// 			<div>
+// 				<CompanyBox companyBox={companyData}/>
+// 			</div>,
+// 			mainElement
+// 		);
+// 	},
+// 	goCities: function() {
+// 		React.render(
+// 			<div className="construction">
+// 				<h1>COMING SOON!</h1>
+// 				<h2>This site is under construction</h2>
+// 			</div>,
+// 			mainElement
+// 			)
+// 	},
+// 	goWhyFresh: function() {
+// 		React.render(
+// 			<div className="construction">
+// 				<h1>COMING SOON!</h1>
+// 				<h2>This site is under construction</h2>
+// 			</div>,
+// 			mainElement
+// 			)
+// 	},
+// 	goForEmployers: function() {
+// 		React.render(
+// 			<div>
+// 				<NewJobForm />
+// 				<CompanyTipsBox />
+// 			</div>,
+// 			mainElement
+// 		);
+// 	}
+// })
+
+// var r = new Router();
+// Backbone.history.start();
+
+// // React.render(
+// // 	<AppComponent />,
+// // 	mainElement
+// // 	)
+
+},{"./components/AppComponent":162,"react":159}],174:[function(require,module,exports){
 'use strict';
 
 var Backbone = require('backbone');
@@ -33194,7 +33249,7 @@ module.exports = Backbone.Model.extend({
 	}
 });
 
-},{"backbone":1}],174:[function(require,module,exports){
+},{"backbone":1}],175:[function(require,module,exports){
 'use strict';
 
 var Backbone = require('backbone');
@@ -33211,7 +33266,7 @@ module.exports = Backbone.Model.extend({
 	urlRoot: 'https://jmingus-server.herokuapp.com/collections/testMicko'
 });
 
-},{"backbone":1}]},{},[172])
+},{"backbone":1}]},{},[173])
 
 
 //# sourceMappingURL=bundle.js.map

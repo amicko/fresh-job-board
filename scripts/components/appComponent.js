@@ -1,76 +1,133 @@
 var React = require('react');
-var FirstBox = require('./firstBoxComponent.js');
-var FormComponent = require('./formComponent.js');
-var NavComponent = require('./navComponent.js');
-var JobRowList = require('./jobRowListComponent');
-var JobRowComponent = require('./JobRowComponent.js');
-var CompanyBoxComponent = require('./companyBoxComponent.js');
-var jobPostCollection = require('../collections/jobPostingCollection.js');
-var jobPost = require('../models/jobPostingModel.js');
-var companyInfoCollection = require('../collections/companyInfoCollection.js');
-var companyInfo = require('../models/companyInfoModel.js');
+var Backbone = require('backbone');
+var JobCollection = require('../collections/jobPostingCollection.js');
 
-// var jobPost1 = new jobPost({
-// 	title: 'Farmer', 
-// 	dateCreated: 'September 29, 2015', 
-// 	company: 'Monsanto', 
-// 	location: 'Houston, TX', 
-// 	description: 'words, words, words', 
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
-// var jobPost2 = new jobPost({
-// 	title: 'Font-End Engineer', 
-// 	dateCreated: 'September 29, 2015', 
-// 	company: 'Google', 
-// 	location: 'Austin, TX', 
-// 	description: 'words, words, words', 
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
-// var jobPost3 = new jobPost({
-// 	title: 'Inventory Supervisor', 
-// 	dateCreated: 'September 29, 2015', 
-// 	company: 'Wal-Mart', 
-// 	location: 'Taylor, TX', 
-// 	description: 'words, words, words', 
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
-// var jobPost4 = new jobPost({
-// 	title: 'Data Entry Specialist', 
-// 	dateCreated: 'September 29, 2015', 
-// 	company: 'Texas State Comptroller', 
-// 	location: 'Austin, TX', 
-// 	description: 'words, words, words', 
-// 	tag: "['stuff', 'junk', 'more stuff']"
-// })
+// Jobs Page:
+var FilterBox = require('./filterBoxComponent.js');
+var JobRowList = require('./jobRowListComponent.js');
+var InfoBox = require('./informationBoxComponent.js');
+var jobData = require('../data/jobData.js');
 
-var company1 = new companyInfo({name: 'MaxPlay', location: 'Austin, TX'});
+// Company Page:
+var CompanyBox = require('./companyBoxListComponent.js');
+var companyData = require('../data/companyData.js');
 
+// For Employers Page:
+var NewJobForm = require('./formComponent.js');
+var CompanyTipsBox = require('./firstBoxComponent.js');
 
-
+console.log('pre-module.exports')
 
 module.exports = React.createClass({
 
-	componentWillMount: function() {
-	this.jobs = new jobPostCollection();
-	this.jobs.fetch();
-	console.log(this.jobs);
-	},
 
+	getInitialState: function() {
+		return {
+			pageName: 'home',
+			id: null
+		};
+	},
+	componentWillMount: function() {
+		var self = this;
+		this.jobs = new JobCollection();
+
+		var Router = Backbone.Router.extend({
+			routes: {
+				'': 'goHome',
+				'home': 'goHome',
+				'jobs': 'goJobs',
+				'companies': 'goCompanies',
+				'cities': 'goCities',
+				'whyFresh': 'goWhyFresh',
+				'forEmployers': 'goForEmployers'
+			},
+			goHome: function() {
+				self.setState({
+					pageName: 'home'
+				})
+			},
+			goJobs: function() {
+				self.setState({
+					pageName: 'jobs'
+				})
+			},
+			goCompanies: function() {
+				self.setState({
+					pageName: 'companies'
+				})
+			},
+			goCities: function() {
+				self.setState({
+					pageName: 'cities'
+				})
+			},
+			goWhyFresh: function() {
+				self.setState({
+					pageName: 'whyFresh'
+				})
+			},
+			goForEmployers: function() {
+				self.setState({
+					pageName: 'forEmployers'
+				})
+			}
+		})
+
+		this.router = new Router();
+		Backbone.history.start();
+	},
 	render: function() {
+		var pageComponent = null;
+
+		if(this.state.pageName === 'home') {
+			console.log('Home Page');
+		}
+		else if(this.state.pageName === 'jobs') {
+			console.log('Jobs Page');
+			pageComponent = <div>
+								<FilterBox />
+								<div className="jobRow-container">
+									<JobRowList jobRow={jobData}/>
+								</div>
+								<div className="infoBox-container">
+									<InfoBox />
+								</div>
+							</div>
+		}
+		else if(this.state.pageName === 'companies') {
+			console.log('Companies Page');
+			pageComponent = <div>
+								<CompanyBox companyBox={companyData}/>
+							</div>
+		}
+		else if(this.state.pageName === 'cities') {
+			console.log('Cities Page');
+			pageComponent = <div className="construction">
+								<h1>COMING SOON!</h1>
+								<h2>This site is under construction</h2>
+							</div>
+		}
+		else if(this.state.pageName === 'whyFresh') {
+			console.log('Why Fresh Page');
+			pageComponent = <div className="construction">
+								<h1>COMING SOON!</h1>
+								<h2>This site is under construction</h2>
+							</div>
+		}
+		else if(this.state.pageName === 'forEmployers') {
+			console.log('For Employers Page');
+			pageComponent = <div>
+								<NewJobForm jobs={this.jobs} router={this.router}/>
+								<CompanyTipsBox />
+							</div>
+		}
+
 		return (
-			<section className="app-Box">
-				<NavComponent />
-				<div className="subNav-Box">
-					<FormComponent />
-					<FirstBox />
-				</div>
-				<div>
-					<JobRowList jobRow={JobRowComponent} />
-				</div>
-				<div>
-					<CompanyBoxComponent model={company1} />
-				</div>
-			</section>
+			<div>
+				<main>
+					{pageComponent}
+				</main>
+			</div>
 			)
 	}
 })

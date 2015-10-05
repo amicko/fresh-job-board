@@ -10,8 +10,8 @@ module.exports = React.createClass({
 					<div className="coverPic"></div>
 					<div className="profilePic"></div>
 					<div className="companyInfo">
-						<span className="companyName">{this.props.model.get('name')}</span>
-						<span className="companyLocation">{this.props.model.get('location')}</span>
+						<span className="companyName">{this.props.company.get('name')}</span>
+						<span className="companyLocation">{this.props.company.get('location')}</span>
 					</div>
 				</div>
 			</section>
